@@ -5,7 +5,7 @@
 #include <pthread.h>
 
 #define N_DINNING_PHILOSOPHERS 5
-#define N_DINNIG_EPOCHS 1
+#define N_DINNING_EPOCHS 1
 
 
 struct _philosopher {
@@ -82,7 +82,7 @@ int main() {
     init_philosophers(N_DINNING_PHILOSOPHERS, philosophers, hashis);
 
     long status;
-    for (int i = 0 ; i < N_DINNIG_EPOCHS ; ++i) {
+    for (int i = 0 ; i < N_DINNING_EPOCHS ; ++i) {
         for (int j = 0 ; j < N_DINNING_PHILOSOPHERS ; ++j) {
             status = pthread_create(&threads[j], NULL, action, (void*)(philosophers + j));
             if (status) {
