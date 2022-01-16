@@ -45,6 +45,9 @@ int main(int argc, char* argv[]) {
     srand((unsigned) time(&t));
     init_mutexes(hashis, N_DINNING_PHILOSOPHERS);
     init_philosophers(N_DINNING_PHILOSOPHERS, philosophers, hashis);
+    printf("\n Type: Asynchronous\n");
+    printf(" Execution Time: %d seconds\n", SECONDS_TO_WAIT_BEFORE_HALT);
+    printf("\n ---------------------Init---------------------\n\n");
 
     long status;
     for (j = 0 ; j < N_DINNING_PHILOSOPHERS ; ++j) {
@@ -64,8 +67,8 @@ int main(int argc, char* argv[]) {
         pthread_join(threads[k], NULL);
     }
 
-    printf("\n -----------End----------\n\n");
-    show_eat_status(philosophers, N_DINNING_PHILOSOPHERS);
+    printf("\n ---------------------End---------------------\n\n");
+    show_action_status(philosophers, N_DINNING_PHILOSOPHERS);
     destroy_mutexes(hashis, N_DINNING_PHILOSOPHERS);
     return 0;
 }
