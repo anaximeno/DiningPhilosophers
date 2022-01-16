@@ -21,6 +21,7 @@ typedef struct _philosopher phil_t;
 
 
 int eat_status[N_DINNING_PHILOSOPHERS];
+int think_status[N_DINNING_PHILOSOPHERS];
 bool halt = false;
 
 
@@ -46,8 +47,8 @@ void init_philosophers(int n, phil_t phils[], pthread_mutex_t hashis[]) {
 
 
 void eat(int time_eating, phil_t* philosopher) {
-    printf(" %s is eating :)\n\n", philosopher->name);
     eat_status[philosopher->id] += 1;
+    printf(" %s is eating :)\n\n", philosopher->name);
     sleep(time_eating);
     printf(" %s stopped eating.\n\n", philosopher->name);
     return ;
@@ -55,6 +56,7 @@ void eat(int time_eating, phil_t* philosopher) {
 
 
 void think(int time_thinking, phil_t* phil) {
+    think_status[phil->id] += 1;
     printf(" %s is thinking -_- (...)\n\n", phil->name);
     sleep(time_thinking);
 }
@@ -66,12 +68,17 @@ void* timer(void* p) {
 }
 
 
-void show_eat_status(phil_t *philosophers, int n) {
+void show_action_status(phil_t *philosophers, int n) {
+    int eat, think;
+    int sum_of_actions = 0;
     for (int i = 0 ; i < n ; ++i) {
+        eat = eat_status[philosophers[i].id];
+        think = think_status[philosophers[i].id];
+        sum_of_actions += eat + think;
         printf(
-            " %s eated %d times.\n\n",
-            (philosophers + i)->name,
-            eat_status[(philosophers + i)->id]
+            " %s ate %d times and thought %d times.\n\n",
+            philosophers[i].name, eat, think
         );
     }
-} 
+    printf(" -> The total of taken actions are %d <- \n\n", sum_of_actions);
+}
