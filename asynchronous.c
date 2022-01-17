@@ -16,7 +16,7 @@ void* action(void* __phil) {
 
     do {
         #if SHOW_INTENTION
-            printf(" %s is trying to eat!\n\n", phil->name);
+            printf(" + %s is trying to eat!\n\n", phil->name);
         #endif
 
         pthread_mutex_lock(phil->left_hashi);
