@@ -6,9 +6,9 @@
 #include "common.c"
 
 /* SYNCHRONOUS Concurrent Philosophers Version:
- * In the synchrounous version the philosopher that didn't get the two 
- * hashis will skip eatting and go directly to think, instead of waiting
- * until a hashi is released to eat and then thinking as on async.
+ * In the synchronous version, the philosopher who didn't get the two chopsticks
+ * will stop eating and go straight to think, instead of waiting until the other chopstick is released to eat
+ * and only then thinking as in asynchronous.
  */
 
 
