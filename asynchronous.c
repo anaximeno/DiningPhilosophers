@@ -6,8 +6,8 @@
 #include "common.c"
 
 /* ASYNCHRONOUS Concurrent Philosophers Version:
- * In the asynchrounous version the philosopher that didn't get any of the 
- * hashis will wait until the hashi is released to eat and then think.
+ * In the asynchronous version, the philosopher who didn't get one of the chopsticks
+ * will wait until the chopstick is released to eat and then think.
  */
 
 
