@@ -5,23 +5,22 @@
 #include <stdbool.h>
 
 #define N_DINNING_PHILOSOPHERS 5
-#define SHOW_INTENTION true
 #define SECONDS_TO_WAIT_BEFORE_HALT 30
 
 
 struct _philosopher {
+    char* name;
     unsigned short id;
     pthread_mutex_t* left_hashi;
     pthread_mutex_t* right_hashi;
-    char* name;
+    unsigned int thought;
+    unsigned int ate;
 };
 
 
 typedef struct _philosopher phil_t;
 
 
-int eat_status[N_DINNING_PHILOSOPHERS];
-int think_status[N_DINNING_PHILOSOPHERS];
 bool halt = false;
 
 
@@ -36,51 +35,64 @@ void destroy_mutexes(pthread_mutex_t mutexes[], int n) {
 
 
 void init_philosophers(int n, phil_t phils[], pthread_mutex_t hashis[]) {
-    char* names[] = {"Aristotle", "Plato", "Socrates", "Democritus", "Descartes"};
-    for (int i = 0 ; i < n ; ++i) {
-        (phils + i)->id = i;
-        (phils + i)->name = names[i];
-        (phils + i)->left_hashi = &hashis[i == 0 ? n-1 : i-1];
-        (phils + i)->right_hashi = &hashis[i];
+    char* names[] = {
+        "Aristotle", "Plato", "Socrates", "Democritus", "Descartes"
+    };
+
+    unsigned short i;
+    phil_t* phil = NULL;
+    for (i = 0, phil = phils ; i < n ; ++i, phil++) {
+        phil->id             = i;
+        phil->ate            = 0;
+        phil->thought        = 0;
+        phil->name           = names[i];
+        phil->right_hashi    = &hashis[i];
+        phil->left_hashi     = &hashis[
+            i == 0 ? n - 1 : i - 1
+        ];
     }
 }
 
 
-void eat(int time_eating, phil_t* philosopher) {
-    eat_status[philosopher->id] += 1;
-    printf(" :) %s is eating.\n\n", philosopher->name);
+void eat(int time_eating, phil_t* phil) {
+    printf(" :) %s is eating.\n\n", phil->name);
     sleep(time_eating);
-    printf(" - %s stopped eating.\n\n", philosopher->name);
-    return ;
+
+    // Increase the number of times it ate
+    phil->ate ++;
+
+    printf(" - %s stopped eating.\n\n", phil->name);
 }
 
 
 void think(int time_thinking, phil_t* phil) {
-    think_status[phil->id] += 1;
     printf(" -_- %s is thinking...\n\n", phil->name);
     sleep(time_thinking);
+
+    // Increase the number of time ti thought
+    phil->thought ++;
+
     printf(" - %s stopped thinking.\n\n", phil->name);
 }
 
 
-void* timer(void* p) {
+void* timer(void* _) {
     sleep(SECONDS_TO_WAIT_BEFORE_HALT);
+
+    // Stops the concurrent threads
     halt = true;
+
     pthread_exit(NULL);
 }
 
 
 void show_action_status(phil_t* philosophers, int n) {
-    int eat, think;
-    int sum_of_actions = 0;
-    for (int i = 0 ; i < n ; ++i) {
-        eat = eat_status[philosophers[i].id];
-        think = think_status[philosophers[i].id];
-        sum_of_actions += eat + think;
-        printf(
-            " %s ate %d times and thought %d times.\n\n",
-            philosophers[i].name, eat, think
-        );
+    int i, sum_of_actions = 0;
+    phil_t* phil = NULL;
+    for (i = 0, phil = philosophers ; i < n ; ++i, phil++) {
+        sum_of_actions += phil->ate + phil->thought;
+        printf(" %s ate %d times and thought %d times.\n\n",
+            phil->name, phil->ate, phil->thought);
     }
     printf(" -> The total of taken actions are %d <- \n\n", sum_of_actions);
 }
