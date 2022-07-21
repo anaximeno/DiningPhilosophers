@@ -38,40 +38,6 @@ void* action(void* __phil) {
 
 
 int main(int argc, char* argv[]) {
-    pthread_mutex_t hashis[N_DINNING_PHILOSOPHERS];
-    phil_t philosophers[N_DINNING_PHILOSOPHERS];
-    pthread_t threads[N_DINNING_PHILOSOPHERS + 1];
-
-    time_t t;
-    int j, k;
-
-    srand((unsigned) time(&t));
-    init_mutexes(hashis, N_DINNING_PHILOSOPHERS);
-    init_philosophers(N_DINNING_PHILOSOPHERS, philosophers, hashis);
-    printf("\n Type: Asynchronous\n");
-    printf(" Execution Time: %d seconds\n", SECONDS_TO_WAIT_BEFORE_HALT);
-    printf("\n ---------------------Init---------------------\n\n");
-
-    long status;
-    for (j = 0 ; j < N_DINNING_PHILOSOPHERS ; ++j) {
-        status = pthread_create(&threads[j], NULL, action, (void*)(philosophers + j));
-        if (status) {
-            perror("pthread_create");
-            exit(status);
-        } else continue;
-    }
-
-    if ((status = pthread_create(&threads[j], NULL, timer, NULL))) {
-        perror("pthread_create");
-        exit(status);
-    }
-
-    for (k = 0 ; k < N_DINNING_PHILOSOPHERS + 1 ; ++k) {
-        pthread_join(threads[k], NULL);
-    }
-
-    printf("\n ---------------------End---------------------\n\n");
-    show_action_status(philosophers, N_DINNING_PHILOSOPHERS);
-    destroy_mutexes(hashis, N_DINNING_PHILOSOPHERS);
+    run(action, "Asynchronous");
     return 0;
 }
